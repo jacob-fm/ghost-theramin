@@ -29,8 +29,14 @@
 // use: Oscil <table_size, update_rate> oscilName (wavetable), look in .h file of table #included above
 Oscil<SIN2048_NUM_CELLS, MOZZI_AUDIO_RATE> aSin(SIN2048_DATA);
 
+// control-rate LFO for a constant, gentle vibrato
+Oscil<SIN2048_NUM_CELLS, MOZZI_CONTROL_RATE> kVibrato(SIN2048_DATA);
+
 const float MIN_FREQ = 100.0f;
 const float MAX_FREQ = 1700.0f;
+
+const float VIBRATO_RATE = 2.0f;  // Hz
+const float VIBRATO_DEPTH = 0.062f;
 
 // one Line segment spans exactly one control update, so the glide always
 // arrives just as the next target comes in
@@ -45,6 +51,7 @@ byte gain = 20;
 
 void setup() {
   startMozzi();  // :)
+  kVibrato.setFreq(VIBRATO_RATE);
   aFreqGlide.set(float_to_Q16n16(MIN_FREQ));
 }
 
@@ -54,6 +61,8 @@ void updateControl() {
   sensorValue = mozziAnalogRead<8>(1);
   unsigned int smoothed = kSmoothSensor.next(sensorValue);
   float frequency = MIN_FREQ + (smoothed / 255.0f) * (MAX_FREQ - MIN_FREQ);
+  // proportional depth, so the wobble sounds the same at every pitch
+  frequency *= 1.0f + (kVibrato.next() / 128.0f) * VIBRATO_DEPTH;
   aFreqGlide.set(float_to_Q16n16(frequency), GLIDE_STEPS);
 }
 
