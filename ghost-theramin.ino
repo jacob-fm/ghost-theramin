@@ -36,8 +36,8 @@ void setup() {
 void updateControl() {
   // put changing controls in here
   sensorValue = mozziAnalogRead<8>(1);
-  float frequency = map(sensorValue, 42, 63, 100, 2000);  // scale it to use it with the servo (value between 0 and 180)
-  Serial.println(sensorValue);
+  float frequency = 100.0f + (sensorValue / 64.0f) * 1600.0f;
+  Serial.println(frequency);
   aSin.setFreq(frequency);
 }
 
