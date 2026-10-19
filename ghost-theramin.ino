@@ -41,6 +41,7 @@ Line<Q16n16> aFreqGlide;
 Smooth<unsigned int> kSmoothSensor(0.85f);
 
 byte sensorValue;
+byte gain = 20;
 
 void setup() {
   startMozzi();  // :)
@@ -58,8 +59,8 @@ void updateControl() {
 
 
 AudioOutput updateAudio() {
-  aSin.setFreq_Q16n16(aFreqGlide.next());    // new frequency every audio sample
-  return MonoOutput::from8Bit(aSin.next());  // return an int signal centred around 0
+  aSin.setFreq_Q16n16(aFreqGlide.next());  // new frequency every audio sample
+  return MonoOutput::fromNBit(16, (int16_t)aSin.next() * gain);
 }
 
 
