@@ -25,15 +25,19 @@
 
 // use: Oscil <table_size, update_rate> oscilName (wavetable), look in .h file of table #included above
 Oscil<SIN2048_NUM_CELLS, MOZZI_AUDIO_RATE> aSin(SIN2048_DATA);
+byte sensorValue;
 
 void setup() {
-  startMozzi();       // :)
-  aSin.setFreq(440);  // set the frequency
+  startMozzi();        // :)
+  aSin.setFreq(1000);  // set the frequency
 }
 
 
 void updateControl() {
   // put changing controls in here
+  sensorValue = mozziAnalogRead<8>(1);
+  float frequency = map(sensorValue, 0, 1023, 100, 2000);  // scale it to use it with the servo (value between 0 and 180)
+  aSin.setFreq(frequency);
 }
 
 
