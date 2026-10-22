@@ -1,23 +1,3 @@
-/*  Example playing a sinewave at a set frequency,
-    using Mozzi sonification library.
-
-    Demonstrates the use of Oscil to play a wavetable.
-
-    Circuit: Audio output on digital pin 9 on a Uno or similar, or
-    DAC/A14 on Teensy 3.1, or
-    check the README or http://sensorium.github.io/Mozzi/
-
-    Mozzi documentation/API
-    https://sensorium.github.io/Mozzi/doc/html/index.html
-
-    Mozzi help/discussion/announcements:
-    https://groups.google.com/forum/#!forum/mozzi-users
-
-    Copyright 2012-2024 Tim Barrass and the Mozzi Team
-
-    Mozzi is licensed under the GNU Lesser General Public Licence (LGPL) Version 2.1 or later.
-*/
-
 #define MOZZI_CONTROL_RATE 64  // Hz, powers of 2 are most reliable; 64 Hz is actually the default, but shown here, for clarity
 #include <Mozzi.h>
 #include <Oscil.h>                // oscillator template
@@ -33,9 +13,9 @@ Oscil<SIN2048_NUM_CELLS, MOZZI_AUDIO_RATE> aSin(SIN2048_DATA);
 Oscil<SIN2048_NUM_CELLS, MOZZI_CONTROL_RATE> kVibrato(SIN2048_DATA);
 
 const float MIN_FREQ = 100.0f;
-const float MAX_FREQ = 1700.0f;
+const float MAX_FREQ = 2000.0f;
 
-const float VIBRATO_RATE = 2.0f;  // Hz
+const float VIBRATO_RATE = 0.5f;
 const float VIBRATO_DEPTH = 0.062f;
 
 // one Line segment spans exactly one control update, so the glide always
@@ -47,7 +27,7 @@ Line<Q16n16> aFreqGlide;
 Smooth<unsigned int> kSmoothSensor(0.85f);
 
 byte sensorValue;
-byte gain = 20;
+byte gain = 50;  // out of 255
 
 void setup() {
   startMozzi();  // :)
